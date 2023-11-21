@@ -16,13 +16,14 @@ app.use('/api/v1', routes)
 
 app.listen(port, async () => {
     log.info(`Permissions API listening at http://localhost:${port}`, 'Bootstraping')
+    let connection = null 
     try {
         log.info('Connecting to database ...', 'Bootstraping')
-        await sequelizeClient.authenticate()
+        connection = await sequelizeClient.authenticate()
     } catch (e) {
         log.error(`Unable to connect to the database: ${e}`, 'Bootstraping')
     } finally {
-        await sequelizeClient.close()
+        if(connection) await sequelizeClient.close()
         log.info('Connection closed', 'Bootstraping')
     }
 })  
