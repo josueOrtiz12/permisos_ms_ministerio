@@ -1,6 +1,6 @@
 const { SUCCESS, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../../../common/constants')
-const { createUserSchema, updateUserSchema } = require('../schema')
-const { getAllUsers, getUserBy, addNewUser, completeUpdateUser } = require('../service') 
+const { createUserSchema, updateUserSchema, replaceUserAttributesSchema } = require('../schema')
+const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, partiallyUpdateUser } = require('../service') 
 const { hashCompare, hashString } = require('../../../utils/crypto')
 
 async function getUsers(req, res) {
@@ -78,9 +78,35 @@ async function updateUser(req, res) {
     }
 }
 
+async function replaceUserAttributes(req, res) {
+    try {
+        const { error } = replaceUserAttributesSchema.validate(req.body, { abortEarly: false })
+        if(error?.details.length > 0) {
+            const e = new Error(error?.details.map(({ message }) => message).join(', '))
+            e.status = BAD_REQUEST
+            throw e
+        }
+        const { params: { id }, body } = req
+        const [ rowsAffected ] = await partiallyUpdateUser(id, body)
+        
+        if(!rowsAffected) {
+            const error = new Error('Id not found')
+            error.status = NOT_FOUND
+            throw error
+        }
+        
+        
+        res.status(SUCCESS).json({ code: 0, data: { rowsAffected } ,message: 'User partially updated successfully' })
+    } catch (e) {
+        console.log(e);
+        const { message, status } = e         
+        res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
+    }
+}
 
 module.exports = {
     getUsers,
     createUser,
-    updateUser
+    updateUser,
+    replaceUserAttributes
 }

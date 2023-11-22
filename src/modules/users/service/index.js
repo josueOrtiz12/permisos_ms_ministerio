@@ -50,10 +50,21 @@ async function completeUpdateUser(id, username, password) {
     }
 }
 
+async function partiallyUpdateUser(id, attributes) {
+    try {
+        return await db.user.update(attributes, { where: { id: { [Op.eq]: id } } })
+    } catch (e) {
+        const error = new Error(e.message)
+        error.status = INTERNAL_SERVER_ERROR
+        throw error
+    }
+}
+
 
 module.exports = {
     getAllUsers,
     getUserBy,
     addNewUser,
-    completeUpdateUser
+    completeUpdateUser,
+    partiallyUpdateUser
 }

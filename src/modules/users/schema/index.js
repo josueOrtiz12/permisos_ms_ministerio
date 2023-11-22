@@ -24,7 +24,13 @@ const updateUserSchema = Joi.object({
 })
 
 
+const replaceUserAttributesSchema = Joi.object({
+    username: Joi.string(),
+}, { allowUnknown: false })
+
+
 module.exports = {
     createUserSchema,
-    updateUserSchema
+    updateUserSchema,
+    replaceUserAttributesSchema
 }
