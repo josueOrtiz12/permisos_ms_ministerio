@@ -1,4 +1,5 @@
-const { SUCCESS, BAD_REQUEST, NOT_FOUND } = require('../../../common/constants')
+const { SUCCESS, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../../../common/constants')
+const { createUserSchema, updateUserSchema } = require('../schema')
 const { getAllUsers, getUserBy, addNewUser, completeUpdateUser } = require('../service') 
 const { hashCompare, hashString } = require('../../../utils/crypto')
 
@@ -15,6 +16,13 @@ async function getUsers(req, res) {
 
 async function createUser(req, res) {
     try {
+        const { error } = createUserSchema.validate(req.body, { abortEarly: false })
+        if(error?.details.length > 0) {
+            const e = new Error(error?.details.map(({ message }) => message).join(', '))
+            e.status = BAD_REQUEST
+            throw e
+        }
+        
         const { body: { id, username, password } } = req
         
         if(await getUserBy('id', id)) {
@@ -34,12 +42,19 @@ async function createUser(req, res) {
 
     } catch (e) {
         const { message, status } = e         
-        res.status(status).json({ code: 1, message: message })
+        res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
     }
 }
 
 async function updateUser(req, res) {
     try {
+        const { error } = updateUserSchema.validate(req.body, { abortEarly: false })
+        if(error?.details.length > 0) {
+            const e = new Error(error?.details.map(({ message }) => message).join(', '))
+            e.status = BAD_REQUEST
+            throw e
+        }
+
         const { params: { id }, body: { username, password } } = req
 
         if(await getUserBy('username', username)) {
@@ -59,7 +74,7 @@ async function updateUser(req, res) {
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected: rowsAffected }, message: 'User updated successfully' })
     } catch (e) {
         const { message, status } = e         
-        res.status(status).json({ code: 1, message: message })
+        res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
     }
 }
 

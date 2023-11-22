@@ -7,7 +7,7 @@ router.get('/', paginationMiddleware, async (req, res) => {
     return await getUsers(req, res)
 })
 
-router.post('/', venezuelanIdMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
     return await createUser(req, res)
 })
 
