@@ -77,7 +77,7 @@ async function updateUser(req, res) {
 
         const { params: { id }, body: { username, password } } = req
 
-        if(await getUserBy('username', username)) {
+        if(req?.body?.name && await getUserBy('username', username)) {
             const error = new Error('Username already exists')
             error.status = BAD_REQUEST
             throw error

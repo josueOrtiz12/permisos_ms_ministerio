@@ -19,7 +19,6 @@ async function getAllRoles(pageNumber, pageSize, attributes = ['id', 'name']) {
 
 async function getRoleBy(param, value, attributes=['id', 'name', 'description']){ 
     try {
-
         const role = await db.role.findOne({ where: { [param]: value }, attributes: attributes })
         return role
     } catch (e) {

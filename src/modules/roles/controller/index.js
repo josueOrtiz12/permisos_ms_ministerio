@@ -25,6 +25,12 @@ async function getRole(req, res) {
         const { params: { id } } = req
         const role = await getRoleBy('id', id)
         
+        if(!role) {
+            const error = new Error('Role not found')
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         return res.status(SUCCESS).json({ code: 0, data: role })
     } catch (e) {
         const { message, status } = e
@@ -112,14 +118,13 @@ async function updateRolePartially(req, res){
             throw error
         }
 
-        if(await getRoleBy('name', req['body']['name'])) {
+        if(req?.body?.name && !await getRoleBy('name', req?.body?.name)) {
             const error = new Error(`Can't update role name to an existing role name`)
             error.status = BAD_REQUEST
             throw error
         }
 
-        const { body, params: { id } } = req
-
+        const { body, params: { id } } = req        
         const [ rowsAffected ] = await partialUpdateRole(id, body)
 
         if(!rowsAffected) {
@@ -129,7 +134,6 @@ async function updateRolePartially(req, res){
         }
 
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected: rowsAffected }, message: 'Role updated successfully'})
-
     } catch (e) {
         const { message, status } = e
         res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })

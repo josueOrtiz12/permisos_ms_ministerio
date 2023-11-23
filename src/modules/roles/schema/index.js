@@ -17,7 +17,7 @@ const updateRoleSchema = Joi.object({
 
 const updaterRolePartiallySchema = Joi.object({
     id: Joi.number(),
-    name: Joi.string(),
+    name: Joi.string().allow(null, ''),
     description: Joi.string().allow(null, '')
 })
 
