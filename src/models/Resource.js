@@ -1,15 +1,13 @@
 module.exports = (DataTypes, sequelize) => {
-    const Role = sequelize.define('role', {
+    const Resource = sequelize.define('resource', {
         id: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
-            allowNull: false,
+            autoIncrement: true,
         },
         name: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         description: {
             type: DataTypes.STRING,
@@ -17,8 +15,8 @@ module.exports = (DataTypes, sequelize) => {
         }
     }, {
         timestamps: true,
-        tableName: 'roles',
+        tableName: 'resources',
     })
     
-    return Role
+    return Resource
 }

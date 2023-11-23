@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "sequelize:seed": "sequelize db:seed:all",
+    "sequelize:seed:undo": "sequelize db:seed:undo:all"
   },
   "keywords": [],
   "author": "",
