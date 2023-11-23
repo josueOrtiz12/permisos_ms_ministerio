@@ -1,10 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const { getUsers, createUser, updateUser, replaceUserAttributes } = require('./controller')
+const { getUsers, createUser, updateUser, replaceUserAttributes, getUserById } = require('./controller')
 const { paginationMiddleware, venezuelanIdMiddleware } = require('../../middlewares')
+const { getUserBy } = require('./service')
 
 router.get('/', paginationMiddleware, async (req, res) => {
     return await getUsers(req, res)
+})
+
+router.get('/:id', venezuelanIdMiddleware, async (req, res) => {
+    return await getUserById(req, res)
 })
 
 router.post('/', async (req, res) => {

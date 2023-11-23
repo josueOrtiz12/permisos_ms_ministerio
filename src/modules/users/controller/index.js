@@ -14,6 +14,26 @@ async function getUsers(req, res) {
     }
 }
 
+async function getUserById(req, res){
+    try {
+        const { params: { id } } = req
+
+        const user = await getUserBy('id', id);
+
+        if(!user) {
+            const error = new Error('Id not found')
+            error.status = NOT_FOUND
+            throw error
+        }
+
+        res.status(SUCCESS).json({ code: 0, data: user })
+        
+    } catch (e) {
+        const { message, status } = e         
+        res.status(status).json({ code: 1, message: message })
+    }
+}
+ 
 async function createUser(req, res) {
     try {
         const { error } = createUserSchema.validate(req.body, { abortEarly: false })
@@ -106,6 +126,7 @@ async function replaceUserAttributes(req, res) {
 
 module.exports = {
     getUsers,
+    getUserById,
     createUser,
     updateUser,
     replaceUserAttributes
