@@ -30,9 +30,9 @@ async function getUserBy(param, value, attributes = ['id', 'username']) {
     }
 }
 
-async function addNewUser(username, password) {
+async function addNewUser(id, username, password) {
     try {
-        return await db.user.create({ username, password })
+        return await db.user.create({ id, username, password })
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR

@@ -43,7 +43,7 @@ async function createUser(req, res) {
             throw e
         }
         
-        const { body: { username, password } } = req
+        const { body: { id, username, password } } = req
         
         if(await getUserBy('username', username)) {
             const error = new Error('Username already exists')
@@ -51,7 +51,7 @@ async function createUser(req, res) {
             throw error
         }
 
-        await addNewUser(username, hashString(password))
+        await addNewUser(id, username, hashString(password))
         res.status(SUCCESS).json({ code: 0, message: 'User created successfully' })
 
     } catch (e) {
