@@ -5,12 +5,14 @@ module.exports = {
     // Add seed data here
     await queryInterface.bulkInsert('roles', [
       {
+        id: 1,
         name: 'Admin',
         description: 'Administrator role',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        id: 2,
         name: 'User',
         description: 'Regular user role',
         createdAt: new Date(),

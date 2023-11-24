@@ -49,9 +49,9 @@ async function completeUpdateRole(id, name, description) {
     }
 }
 
-async function partialUpdateRole(id, attributes) {
+async function partialUpdateRole(id, properties) {
     try {
-        return await db.role.update(attributes, { where: { id: { [Op.eq]: id } } })
+        return await db.role.update(properties, { where: { id: { [Op.eq]: id } } })
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR

@@ -2,27 +2,25 @@ const { Op } = require('sequelize')
 const db = require('../../../models')
 const { INTERNAL_SERVER_ERROR } = require('../../../common/constants')
 
-
-async function getAllUsers(pageNumber = 1, pageSize = 10, attributes = ['id', 'username']) {
+async function getAllResources(pageNumber, pageSize, attributes = ['id', 'name', 'description']) {
     try {
-        const users = await db.user.findAll({
+        const resources = await db.resource.findAll({
             skip: (pageNumber - 1) * pageSize,
             limit: pageSize,
             attributes: attributes
         })
-        return users;
+        return resources;        
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR   
         throw error
-
-    }
+    }   
 }
 
-async function getUserBy(param, value, attributes = ['id', 'username']) {
+async function getResourceBy(param, value, attributes = ['id', 'name', 'description']) {
     try {
-        const user = await db.user.findOne({ where: { [param]: value }, attributes: attributes })
-        return user 
+        const resource = await db.resource.findOne({ where: { [param]: value }, attributes: attributes })
+        return resource 
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR
@@ -30,9 +28,9 @@ async function getUserBy(param, value, attributes = ['id', 'username']) {
     }
 }
 
-async function addNewUser(username, password) {
+async function addNewResource(name, description) {
     try {
-        return await db.user.create({ username, password })
+        return await db.resource.create({ name, description })
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR
@@ -40,9 +38,9 @@ async function addNewUser(username, password) {
     }
 }
 
-async function completeUpdateUser(id, username, password) {
+async function updateResourceComplete(id, name, description) {
     try {
-        return await db.user.update({ username: username, password :password }, { where: { id: { [Op.eq]: id } } })
+        return await db.resource.update({ name, description }, { where: { id: { [Op.eq]: id } } })
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR
@@ -50,21 +48,20 @@ async function completeUpdateUser(id, username, password) {
     }
 }
 
-async function editUserPartial(id, properties) {
+async function editResourcePartial(id, properties) {
     try {
-        return await db.user.update(properties, { where: { id: { [Op.eq]: id } } })
+        return await db.resource.update(properties, { where: { id: { [Op.eq]: id } } })
     } catch (e) {
         const error = new Error(e.message)
         error.status = INTERNAL_SERVER_ERROR
         throw error
     }
 }
-
 
 module.exports = {
-    getAllUsers,
-    getUserBy,
-    addNewUser,
-    completeUpdateUser,
-    editUserPartial
+    getAllResources,
+    getResourceBy,
+    addNewResource,
+    updateResourceComplete,
+    editResourcePartial
 }

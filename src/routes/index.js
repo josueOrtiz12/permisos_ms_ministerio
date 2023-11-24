@@ -4,5 +4,6 @@ const app = express()
 
 router.use('/users', require('../modules/users'))
 router.use('/roles', require('../modules/roles'))
+router.use('/resources', require('../modules/resources'))
 
 module.exports = router

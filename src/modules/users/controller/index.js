@@ -1,6 +1,6 @@
 const { SUCCESS, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../../../common/constants')
 const { createUserSchema, updateUserSchema, replaceUserAttributesSchema } = require('../schema')
-const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, partiallyUpdateUser } = require('../service') 
+const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, editUserPartial } = require('../service') 
 const { hashCompare, hashString } = require('../../../utils/crypto')
 
 async function getUsers(req, res) {
@@ -43,21 +43,15 @@ async function createUser(req, res) {
             throw e
         }
         
-        const { body: { id, username, password } } = req
+        const { body: { username, password } } = req
         
-        if(await getUserBy('id', id)) {
-            const error = new Error('Id already exists')
-            error.status = BAD_REQUEST
-            throw error
-        }
-
         if(await getUserBy('username', username)) {
             const error = new Error('Username already exists')
             error.status = BAD_REQUEST
             throw error
         }
 
-        await addNewUser(id, username, hashString(password))
+        await addNewUser(username, hashString(password))
         res.status(SUCCESS).json({ code: 0, message: 'User created successfully' })
 
     } catch (e) {
@@ -107,7 +101,7 @@ async function replaceUserAttributes(req, res) {
             throw e
         }
         const { params: { id }, body } = req
-        const [ rowsAffected ] = await partiallyUpdateUser(id, body)
+        const [ rowsAffected ] = await editUserPartial(id, body)
         
         if(!rowsAffected) {
             const error = new Error('Id not found')
