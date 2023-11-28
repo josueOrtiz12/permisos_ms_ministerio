@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 function generateToken(payload, secretKey, options = {}) {
     return jwt.sign(payload, secretKey, options)
 }
