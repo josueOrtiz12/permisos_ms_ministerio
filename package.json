@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "sequelize:seed": "sequelize db:seed:all",
-    "sequelize:seed:undo": "sequelize db:seed:undo:all"
+    "sequelize:seed:undo": "sequelize db:seed:undo:all",
+    "sequelize:migrate": "sequelize db:migrate"
   },
   "keywords": [],
   "author": "",
