@@ -21,11 +21,13 @@ db.roleByUser.belongsTo(db.user, { foreignKey: 'userId' })
 db.roleByUser.belongsTo(db.role, { foreignKey: 'roleId' })
 db.resource.hasMany(db.permission, { foreignKey: 'resourceId' })
 db.role.hasMany(db.permission, { foreignKey: 'roleId' })
+db.permission.belongsTo(db.role, { foreignKey: 'roleId' })
+db.permission.belongsTo(db.resource, { foreignKey: 'resourceId' })
 
 
 db.sequelize
   .sync({ 
-    // force: DB_FORCE_SYNC || false, 
+    force: DB_FORCE_SYNC || false, 
     // alter: DB_ALTER_SYNC || false 
   })
   .then(() => log.info('Database synchronized', 'Bootstraping'))
