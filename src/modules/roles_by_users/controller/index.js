@@ -3,7 +3,6 @@ const { addNewRoleToUserSchema, editRoleToUserSchema } = require('../schema')
 const { getRolesByUserId, addNewRoleToUser, editRoleByUserId } = require('../service')
 const { getRoleBy } = require('../../roles/service')
 const { getUserBy } = require('../../users/service')
-const { use } = require('..')
 
 async function getRolesByUser(req, res) {
     try {
@@ -36,15 +35,6 @@ async function addRoleToUser(req, res) {
 
         if(!await getUserBy('id', userId)) {
             const error = new Error('User not found')
-            error.status = BAD_REQUEST
-            throw error
-        }
-
-        const [ record ] = await getRolesByUserId(1, 10, userId)
-        const { dataValues: { role: { dataValues: { id } } } } = record
-
-        if(parseInt(id) === parseInt(roleId)) {
-            const error = new Error('User already has this role')
             error.status = BAD_REQUEST
             throw error
         }
