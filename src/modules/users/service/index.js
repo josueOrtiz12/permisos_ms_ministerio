@@ -10,6 +10,11 @@ async function getAllUsers(pageNumber = 1, pageSize = 10, attributes = ['id', 'u
             limit: pageSize,
             attributes: attributes
         })
+        if(!users.length) { 
+            const error = new Error('Users not found')
+            error.status = NOT_FOUND
+            throw error
+        }
         return users;
     } catch (e) {
         const error = new Error(e.message)

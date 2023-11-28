@@ -9,6 +9,13 @@ async function getAllResources(pageNumber, pageSize, attributes = ['id', 'name',
             limit: pageSize,
             attributes: attributes
         })
+
+        if(!resources.length) {
+            const error = new Error('Resources not found')
+            error.status = NOT_FOUND
+            throw error
+        }
+        
         return resources;        
     } catch (e) {
         const error = new Error(e.message)

@@ -9,6 +9,13 @@ async function getAllRoles(pageNumber, pageSize, attributes = ['id', 'name']) {
             limit: pageSize,
             attributes: attributes
         })
+
+        if(!roles.length) {
+            const error = new Error('Roles not found')
+            error.status = NOT_FOUND
+            throw error
+        }
+        
         return roles
     } catch (e) {
         const error = new Error(e.message)

@@ -82,7 +82,15 @@ async function editRoleToUser(req, res) {
             throw error
         }
 
-        const [ record ] = await getRolesByUserId(1, 10, userId)
+        const rolesByUser = await getRolesByUserId(1, 10, userId)
+
+        if(!rolesByUser.length) {
+            const error = new Error('User has no roles')
+            error.status = BAD_REQUEST
+            throw error
+        }
+        
+        const [ record ] = rolesByUser
         const { dataValues: { role: { dataValues: { id } } } } = record
 
         if(parseInt(id) === parseInt(roleId)) {
