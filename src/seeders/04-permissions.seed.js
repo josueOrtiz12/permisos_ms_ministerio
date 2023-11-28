@@ -14,7 +14,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        roleId: 1, // Assuming role with ID 2 exists
+        roleId: 2, // Assuming role with ID 2 exists
         resourceId: 2, // Assuming resource with ID 2 exists
         execute: true,
         read: true,

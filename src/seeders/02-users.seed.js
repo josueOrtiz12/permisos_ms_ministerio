@@ -10,14 +10,12 @@ module.exports = {
     // Add seed data for the User model
     await queryInterface.bulkInsert('users', [
       {
-        id: 1,
         username: 'admin',
         password: hashedString,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        id: 2,
         username: 'user',
         password: hashedString,
         createdAt: new Date(),

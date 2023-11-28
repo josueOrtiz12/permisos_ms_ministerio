@@ -5,14 +5,12 @@ module.exports = {
     // Add seed data for the Resource model
     await queryInterface.bulkInsert('resources', [
       {
-        id: 1,
         name: 'Resource 1',
         description: 'Description for Resource 1',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        id: 2,
         name: 'Resource 2',
         description: 'Description for Resource 2',
         createdAt: new Date(),
