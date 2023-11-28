@@ -1,0 +1,13 @@
+const VENEZUELAN_ID_REGEX = /^(V|E|P)?\d{0,10}(\.\d{3}){0,2}$/;
+const BAD_REQUEST = 400
+const NOT_FOUND = 404
+const INTERNAL_SERVER_ERROR = 500
+const SUCCESS = 200
+
+module.exports = {
+    VENEZUELAN_ID_REGEX,
+    BAD_REQUEST,
+    INTERNAL_SERVER_ERROR,
+    SUCCESS,
+    NOT_FOUND
+}
