@@ -34,13 +34,6 @@ async function addPermissions(req, res) {
         if(!await getRoleBy('id', roleId)) {
             throw { message: 'Role not found', status: BAD_REQUEST }
         }
-
-        const [ record ] = await getPermissionsByRoleId(1, 10, roleId)
-        const { dataValues: { role: { dataValues: { id } } } } = record
-
-        if(parseInt(id) === parseInt(resourceId)) {
-            throw { message: 'This role have already this resource associated', status: BAD_REQUEST }
-        }
         
         await addPermissionsToRole(roleId, resourceId)
         res.status(SUCCESS).json({code: 0, message: 'Permission added successfully'})

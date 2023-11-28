@@ -10,6 +10,7 @@ const { env: { APP_PORT } } = process
 const app = express()
 const port = APP_PORT || 3000
 
+
 app.use(cors())
 app.use(express.json())
 app.use('/api/v1', routes)

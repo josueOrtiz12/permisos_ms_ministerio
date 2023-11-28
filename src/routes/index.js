@@ -8,4 +8,6 @@ router.use('/resources', require('../modules/resources'))
 router.use('/roles/users', require('../modules/roles_by_users'))
 router.use('/permissions', require('../modules/permissions'))
 
+router.use('/auth' ,  require('../modules/auth'))
+
 module.exports = router
