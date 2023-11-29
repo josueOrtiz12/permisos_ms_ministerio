@@ -10,7 +10,6 @@ const getRoleSchema = Joi.object({
 })
 
 const updateRoleSchema = Joi.object({
-    id: Joi.number().required(),
     name: Joi.string().required(),
     description: Joi.string().allow(null, '')
 })

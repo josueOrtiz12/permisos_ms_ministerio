@@ -10,13 +10,11 @@ const createResourceSchema = Joi.object({
 })
 
 const updateResourceSchema = Joi.object({
-    id: Joi.number().required(),
     name: Joi.string().required(),
     description: Joi.string().required()
 })
 
 const editResourceSchema = Joi.object({
-    id: Joi.number().required(),
     name: Joi.string(),
     description: Joi.string()
 })

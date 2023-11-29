@@ -1,4 +1,4 @@
-const { INTERNAL_SERVER_ERROR, SUCCESS, BAD_REQUEST } = require('../../../common/constants')
+const { INTERNAL_SERVER_ERROR, SUCCESS, BAD_REQUEST, NOT_FOUND } = require('../../../common/constants')
 const { createRoleSchema, getRoleSchema, updateRoleSchema, updaterRolePartiallySchema } = require('../schema')
 const { getAllRoles, getRoleBy,addNewRole, completeUpdateRole, partialUpdateRole } = require('../service')
 
@@ -27,7 +27,7 @@ async function getRole(req, res) {
         
         if(!role) {
             const error = new Error('Role not found')
-            error.status = BAD_REQUEST
+            error.status = NOT_FOUND
             throw error
         }
 
@@ -66,10 +66,15 @@ async function createRole(req, res) {
 
 async function updateRole(req, res) {
     try {
-        const { body } = req
-        req.body.id = req.params.id
+        const { body, params: { id } } = req
         const { error } = updateRoleSchema.validate(body, { abortEarly: false })
-        
+
+        if(!Number.isInteger(parseInt(id))) {
+            const error = new Error('ID must be a number')
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         if(error?.details.length > 0) {
             const e = new Error(error?.details.map(({ message }) => message).join(', '))
             e.status = BAD_REQUEST
@@ -82,7 +87,7 @@ async function updateRole(req, res) {
             throw error
         }
 
-        const { id, name, description } = body
+        const { name, description } = body
 
         const [ rowsAffected ] = await completeUpdateRole(id, name, description)
 
