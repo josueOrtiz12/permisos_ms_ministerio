@@ -15,7 +15,8 @@ async function login(req, res){
             error.details.forEach((detail) => {
                 errors.push(detail.message);
             });
-            return res.status(BAD_REQUEST).json({ errors: errors, code: 1 });
+            return res.status(BAD_REQUEST).send(errors.join(', '));
+            
           }
           
         const { body: { username, id, password } } = req
@@ -28,7 +29,7 @@ async function login(req, res){
         if(hashString(password) !== user?.password) throw { message: 'Password not match', status: BAD_REQUEST }
 
         const rolesByUser = await getRolesByUserId(1, 10, id)
-        const token = generateToken(JSON.stringify(rolesByUser))
+        const token = generateToken({...rolesByUser})
 
         res.status(SUCCESS).json({ code: 0, data: { token: token }, message: 'Login success' })      
     } catch (e) {

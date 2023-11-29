@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { env: { APP_SECRET_KEY } } = process
+const { env: { APP_SECRET_KEY, APP_EXP_TIME } } = process
 
-function generateToken(payload, secretKey = APP_SECRET_KEY, options = {}) {
-    return jwt.sign(payload, secretKey, options)
+function generateToken(payload, expiresIn = APP_EXP_TIME, secretKey = APP_SECRET_KEY, options = {}) {
+
+    return jwt.sign(payload, secretKey, {expiresIn : expiresIn , ...options})
 }
 
 function verifyToken(token, secretKey = APP_SECRET_KEY) {

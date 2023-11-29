@@ -12,7 +12,9 @@ const loginSchema = Joi.object({
     password: Joi.string().required().messages({
         'any.required': 'Invalid password'
     })    
+    
 });
+
 
 
 
