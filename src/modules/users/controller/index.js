@@ -45,6 +45,12 @@ async function createUser(req, res) {
         
         const { body: { id, username, password } } = req
         
+        if(await getUserBy('id', id)) {
+            const error = new Error('Id already exists')
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         if(await getUserBy('username', username)) {
             const error = new Error('Username already exists')
             error.status = BAD_REQUEST
