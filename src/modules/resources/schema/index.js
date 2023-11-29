@@ -15,7 +15,6 @@ const updateResourceSchema = Joi.object({
 })
 
 const editResourceSchema = Joi.object({
-    id: Joi.number().required(),
     name: Joi.string(),
     description: Joi.string()
 })
