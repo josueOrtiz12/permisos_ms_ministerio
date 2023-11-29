@@ -105,7 +105,6 @@ async function updateResource(req, res) {
 
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected: rowsAffected },message: 'Resource updated successfully' })
     } catch (e) {
-        console.log(e)
         const { message, status } = e
         res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
     }
