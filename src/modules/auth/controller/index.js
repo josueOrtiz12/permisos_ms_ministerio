@@ -3,11 +3,24 @@ const { getRolesByUserId } = require('../../roles_by_users/service')
 const { generateToken } = require('../../../utils/jwt')
 const { hashString } = require('../../../utils/crypto')
 const { INTERNAL_SERVER_ERROR, BAD_REQUEST, SUCCESS } = require('../../../common/constants')
+const {loginSchema} = require('../schema/index')
 
 
 async function login(req, res){
     try {
+
+        const { error } =  loginSchema.validate(req.body, {abortEarly: false})
+        if (error) {
+            let errors = []
+            error.details.forEach((detail) => {
+                errors.push(detail.message);
+            });
+            return res.status(BAD_REQUEST).json({ errors: errors, code: 1 });
+          }
+          
         const { body: { username, id, password } } = req
+
+
         const user = await getUserBy('id', id, ['id', 'username', 'password'])
 
         if(!user) throw { message: 'User not found', status: BAD_REQUEST }
