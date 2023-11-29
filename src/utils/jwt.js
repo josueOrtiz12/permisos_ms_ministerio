@@ -16,7 +16,6 @@ function verifyToken(token, secretKey = APP_SECRET_KEY) {
     } 
 }
 
-
 module.exports = {
     generateToken,
     verifyToken
