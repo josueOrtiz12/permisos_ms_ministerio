@@ -8,11 +8,12 @@ function generateToken(payload, expiresIn = APP_EXP_TIME, secretKey = APP_SECRET
 
 function verifyToken(token, secretKey = APP_SECRET_KEY) {
     try {
-        const decoded = jwt.verify(token, secretKey)
-        return decoded;
+        const decoded = jwt.verify(token, secretKey);
+        const { exp, ...payload } = decoded;
+        return { payload, exp };
     } catch (e) {
-        throw new Error(e)
-    }
+        throw new Error(e.message);
+    } 
 }
 
 
