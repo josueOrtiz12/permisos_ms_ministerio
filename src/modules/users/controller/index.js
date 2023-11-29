@@ -107,6 +107,17 @@ async function replaceUserAttributes(req, res) {
             throw e
         }
         const { params: { id }, body } = req
+
+        const errors = Object.keys(body).map((key) => {
+            if(getUserBy(key, body[key])) return `This property can't be updated: ${key}`
+        }, [])
+
+        if(errors.length > 0) {
+            const error = new Error(errors.join(', '))
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         const [ rowsAffected ] = await editUserPartial(id, body)
         
         if(!rowsAffected) {
@@ -114,7 +125,6 @@ async function replaceUserAttributes(req, res) {
             error.status = NOT_FOUND
             throw error
         }
-        
         
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected } ,message: 'User partially updated successfully' })
     } catch (e) {
