@@ -67,9 +67,13 @@ async function createResource(req, res) {
 
 async function updateResource(req, res) {
     try {
-        req.body.id = req.params.id
         const { error } = updateResourceSchema.validate(req.body, { abortEarly: false })
-        delete req.query.id
+
+        if(!Number.isInteger(parseInt(req?.params?.id))) {
+            const error = new Error('Id must be a number')
+            error.status = BAD_REQUEST
+            throw error
+        }
         
         if(error?.details.length > 0) {
             const e = new Error(error?.details.map(({ message }) => message).join(', '))
