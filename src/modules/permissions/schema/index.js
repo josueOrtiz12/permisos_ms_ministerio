@@ -1,5 +1,4 @@
 const Joi = require('joi')
-const { editPermissions } = require('../controller')
 
 const addPermissionsSchema = Joi.object({
     roleId: Joi.number().required(),

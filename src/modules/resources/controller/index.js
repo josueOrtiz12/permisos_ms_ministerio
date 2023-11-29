@@ -67,9 +67,13 @@ async function createResource(req, res) {
 
 async function updateResource(req, res) {
     try {
-        req.body.id = req.params.id
         const { error } = updateResourceSchema.validate(req.body, { abortEarly: false })
-        delete req.query.id
+
+        if(!Number.isInteger(parseInt(req?.params?.id))) {
+            const error = new Error('Id must be a number')
+            error.status = BAD_REQUEST
+            throw error
+        }
         
         if(error?.details.length > 0) {
             const e = new Error(error?.details.map(({ message }) => message).join(', '))
@@ -85,7 +89,7 @@ async function updateResource(req, res) {
             throw error
         }
 
-        if(name && await getResourceBy('name', name)) {
+        if(await getResourceBy('name', name)) {
             const error = new Error('name of this resource already exists')
             error.status = BAD_REQUEST
             throw error
@@ -101,7 +105,6 @@ async function updateResource(req, res) {
 
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected: rowsAffected },message: 'Resource updated successfully' })
     } catch (e) {
-        console.log(e)
         const { message, status } = e
         res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
     }
@@ -109,10 +112,14 @@ async function updateResource(req, res) {
 
 async function editResource(req, res) {
     try {
-        req.body.id = req.params.id
         const { error } = editResourceSchema.validate(req.body, { abortEarly: false })
-        delete req.query.id
         
+        if(!Number.isInteger(parseInt(req?.params?.id))) {
+            const error = new Error('Id must be a number')
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         if(error?.details.length > 0) {
             const e = new Error(error?.details.map(({ message }) => message).join(', '))
             e.status = BAD_REQUEST

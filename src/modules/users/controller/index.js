@@ -45,6 +45,12 @@ async function createUser(req, res) {
         
         const { body: { id, username, password } } = req
         
+        if(await getUserBy('id', id)) {
+            const error = new Error('Id already exists')
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         if(await getUserBy('username', username)) {
             const error = new Error('Username already exists')
             error.status = BAD_REQUEST
@@ -71,7 +77,7 @@ async function updateUser(req, res) {
 
         const { params: { id }, body: { username, password } } = req
 
-        if(req?.body?.name && await getUserBy('username', username)) {
+        if(await getUserBy('username', username)?.username !== username) {
             const error = new Error('Username already exists')
             error.status = BAD_REQUEST
             throw error
@@ -101,6 +107,17 @@ async function replaceUserAttributes(req, res) {
             throw e
         }
         const { params: { id }, body } = req
+
+        const errors = Object.keys(body).map((key) => {
+            if(getUserBy(key, body[key])) return `This property can't be updated: ${key}`
+        }, [])
+
+        if(errors.length > 0) {
+            const error = new Error(errors.join(', '))
+            error.status = BAD_REQUEST
+            throw error
+        }
+
         const [ rowsAffected ] = await editUserPartial(id, body)
         
         if(!rowsAffected) {
@@ -108,7 +125,6 @@ async function replaceUserAttributes(req, res) {
             error.status = NOT_FOUND
             throw error
         }
-        
         
         res.status(SUCCESS).json({ code: 0, data: { rowsAffected } ,message: 'User partially updated successfully' })
     } catch (e) {
