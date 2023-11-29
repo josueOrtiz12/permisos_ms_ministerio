@@ -1,4 +1,4 @@
-const { INTERNAL_SERVER_ERROR, SUCCESS, BAD_REQUEST } = require('../../../common/constants')
+const { INTERNAL_SERVER_ERROR, SUCCESS, BAD_REQUEST, NOT_FOUND } = require('../../../common/constants')
 const { createRoleSchema, getRoleSchema, updateRoleSchema, updaterRolePartiallySchema } = require('../schema')
 const { getAllRoles, getRoleBy,addNewRole, completeUpdateRole, partialUpdateRole } = require('../service')
 
@@ -27,7 +27,7 @@ async function getRole(req, res) {
         
         if(!role) {
             const error = new Error('Role not found')
-            error.status = BAD_REQUEST
+            error.status = NOT_FOUND
             throw error
         }
 
