@@ -7,7 +7,7 @@ router.get('/', [verifyTokenMiddleware , paginationMiddleware], async (req, res)
     return await getUsers(req, res)
 })
 
-router.get('/:id', venezuelanIdMiddleware, async (req, res) => {
+router.get('/:id', [verifyTokenMiddleware, venezuelanIdMiddleware], async (req, res) => {
     return await getUserById(req, res)
 })
 
@@ -15,11 +15,11 @@ router.post('/', async (req, res) => {
     return await createUser(req, res)
 })
 
-router.patch('/:id', venezuelanIdMiddleware, async (req, res) => {
+router.patch('/:id', [verifyTokenMiddleware, venezuelanIdMiddleware], async (req, res) => {
     return await updateUser(req, res)
 })
 
-router.put('/:id', venezuelanIdMiddleware, async (req, res) => {
+router.put('/:id', [verifyTokenMiddleware , venezuelanIdMiddleware], async (req, res) => {
     return await replaceUserAttributes(req, res)
 })
 
