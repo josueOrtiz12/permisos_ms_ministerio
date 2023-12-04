@@ -19,16 +19,16 @@ async function login(req, res){
             
           }
           
-        const { body: { username, id, password } } = req
+        const { body: { username, password } } = req
 
 
-        const user = await getUserBy('id', id, ['id', 'username', 'password'])
+        const user = await getUserBy('username', username, ['id', 'username', 'password'])
 
         if(!user) throw { message: 'User not found', status: BAD_REQUEST }
         if(user?.username !== username) throw { message: 'Username not match', status: BAD_REQUEST } 
         if(hashString(password) !== user?.password) throw { message: 'Password not match', status: BAD_REQUEST }
 
-        const rolesByUser = await getRolesByUserId(1, 10, id)
+        const rolesByUser = await getRolesByUserId(1, 10, user.id)
         const token = generateToken({...rolesByUser})
 
         res.status(SUCCESS).json({ code: 0, data: { token: token }, message: 'Login success' })      
