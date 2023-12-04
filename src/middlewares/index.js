@@ -1,12 +1,10 @@
-const { error } = require("npmlog");
-const { BAD_REQUEST, VENEZUELAN_ID_REGEX, UNAUTHORIZED } = require("../common/constants")
+const { BAD_REQUEST, VENEZUELAN_ID_REGEX, UNAUTHORIZED, BEARER_PREFIX } = require("../common/constants")
 const {verifyToken} = require("../utils/jwt")
-const secretKey = process.env.SECRET_KEY;
 
    // Middleware para verificar el token en las rutas protegidas
    function verifyTokenMiddleware(req, res, next) {
-    try{
-        const token = req.headers.authorization.split('Bearer').pop();
+    try {
+        const token = req.headers?.authorization?.split(BEARER_PREFIX).pop();
         if(!token){
             throw new Error('Error token require');
         }
@@ -14,7 +12,7 @@ const secretKey = process.env.SECRET_KEY;
         if(!result){
             throw new Error ('Error in authenticate user');
         }
-    next()
+        next()
     }catch(e){
         return res.status(UNAUTHORIZED).send({ code : 1, message : e.message});
     }
