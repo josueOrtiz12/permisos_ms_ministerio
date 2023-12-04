@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jsonwebtoken');
+const { verificarToken } = require('../../middlewares')
+const secretKey = process.env.SECRET_KEY;
 
 const { login } = require('./controller');
 
