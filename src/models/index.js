@@ -27,8 +27,8 @@ db.permission.belongsTo(db.resource, { foreignKey: 'resourceId' })
 
 db.sequelize
   .sync({ 
-    // force: DB_FORCE_SYNC || false, 
-    // alter: DB_ALTER_SYNC || false 
+    force: DB_FORCE_SYNC || false, 
+    alter: DB_ALTER_SYNC || false 
   })
   .then(() => log.info('Database synchronized', 'Bootstraping'))
 

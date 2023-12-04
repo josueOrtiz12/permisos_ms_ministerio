@@ -1,17 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const { paginationMiddleware } = require('../../middlewares')
+const { paginationMiddleware, verifyTokenMiddleware } = require('../../middlewares')
 const { getPermissionsByRole, addPermissions, editPermissions } = require('./controller')
 
-router.get('/:roleId', paginationMiddleware, async (req, res) => {
+router.get('/:roleId', [verifyTokenMiddleware , paginationMiddleware], async (req, res) => {
     return await getPermissionsByRole(req, res)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', verifyTokenMiddleware, async (req, res) => {
     return await addPermissions(req, res)
 })
 
-router.put('/:roleId', async (req, res) => {
+router.put('/:roleId', verifyTokenMiddleware ,async (req, res) => {
     return await editPermissions(req, res)
 })   
 

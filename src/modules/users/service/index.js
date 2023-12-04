@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
 const db = require('../../../models')
-const { INTERNAL_SERVER_ERROR } = require('../../../common/constants')
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('../../../common/constants')
 
 
 async function getAllUsers(pageNumber = 1, pageSize = 10, attributes = ['id', 'username']) {
