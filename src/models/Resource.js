@@ -14,7 +14,21 @@ module.exports = (DataTypes, sequelize) => {
         description: {
             type: DataTypes.STRING,
             allowNull: true,
-        }
+        },
+        level: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 0,    
+        },
+        url: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            defaultValue: '/',
+        },
+        icon: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     }, {
         timestamps: true,
         tableName: 'resources',

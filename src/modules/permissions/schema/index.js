@@ -11,6 +11,9 @@ editPermissionsSchema = Joi.object({
     write: Joi.boolean(),
     roleId: Joi.number().required(),
     resourceId: Joi.number(),  
+    level: Joi.number().integer(),
+    url: Joi.string(),
+    icon: Joi.string(),
 })
 
 module.exports = {
