@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getUsers, createUser, updateUser, replaceUserAttributes, getUserById } = require('./controller')
+const { getUsers, createUser, updateUser, replaceUserAttributes, getUserById, resetPassword } = require('./controller')
 const { paginationMiddleware, venezuelanIdMiddleware, verifyTokenMiddleware } = require('../../middlewares')
 
 router.get('/', [verifyTokenMiddleware , paginationMiddleware], async (req, res) => {
@@ -21,6 +21,11 @@ router.patch('/:id', [verifyTokenMiddleware, venezuelanIdMiddleware], async (req
 
 router.put('/:id', [verifyTokenMiddleware , venezuelanIdMiddleware], async (req, res) => {
     return await replaceUserAttributes(req, res)
+})
+
+router.post('/:id/reset/password', [verifyTokenMiddleware , venezuelanIdMiddleware], async (req , res) =>{
+
+    return await resetPassword(req , res)
 })
 
 module.exports = router

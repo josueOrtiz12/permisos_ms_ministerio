@@ -65,11 +65,23 @@ async function editUserPartial(id, properties) {
     }
 }
 
+async function restorePassword( id, password){
+    try {
+        return await db.user.update({password:password }, { where: { id: { [Op.eq]: id } } })
+
+    } catch (e) {
+        const error = new Error(e.message)
+        error.status = INTERNAL_SERVER_ERROR
+        throw error
+    }
+}
+
 
 module.exports = {
     getAllUsers,
     getUserBy,
     addNewUser,
     completeUpdateUser,
-    editUserPartial
+    editUserPartial,
+    restorePassword
 }

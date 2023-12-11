@@ -1,6 +1,6 @@
 const { SUCCESS, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../../../common/constants')
-const { createUserSchema, updateUserSchema, replaceUserAttributesSchema } = require('../schema')
-const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, editUserPartial } = require('../service') 
+const { createUserSchema, updateUserSchema, replaceUserAttributesSchema, schemaRestore } = require('../schema')
+const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, editUserPartial, restorePassword } = require('../service') 
 const { hashCompare, hashString } = require('../../../utils/crypto')
 
 async function getUsers(req, res) {
@@ -134,10 +134,47 @@ async function replaceUserAttributes(req, res) {
     }
 }
 
+async function resetPassword(req , res ){
+    try {
+        const { params: { id }} = req
+
+        const { error } = schemaRestore.validate( {id:id} , { abortEarly: false })
+        if(error?.details.length > 0) {
+            const e = new Error(error?.details.map(({ message }) => message).join(', '))
+            e.status = BAD_REQUEST
+            throw e
+        }
+
+        const user  = await getUserBy('id' , id)
+        console.log(user)
+
+        if(!user){
+            return res.status(404).json({message : 'Usuario no encontrado'})
+        }
+
+        const [rowsAffected]  = await restorePassword(id, hashString(id));
+        if(!rowsAffected) {
+            const error = new Error('Id not found')
+            error.status = NOT_FOUND
+            throw error
+        }
+        
+        res.status(SUCCESS).json({ code: 0, data: { rowsAffected } ,message: 'the usser hash change the password' })
+
+        
+
+    } catch (e) {
+        const { message , status} = e
+        res.status(status || INTERNAL_SERVER_ERROR).json({ code: 1, message: message })
+    }
+}
+
+
 module.exports = {
     getUsers,
     getUserById,
     createUser,
     updateUser,
-    replaceUserAttributes
+    replaceUserAttributes,
+    resetPassword
 }
