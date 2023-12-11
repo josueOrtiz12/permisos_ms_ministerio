@@ -23,6 +23,13 @@ const updateUserSchema = Joi.object({
     })
 })
 
+const schemaRestore = Joi.object({
+    id: Joi.string().regex(VENEZUELAN_ID_REGEX).required().messages({
+        'string.pattern.base': 'Id must be a valid venezuelan id',
+        'any.required': 'Id is required'
+    })
+})
+
 
 const replaceUserAttributesSchema = Joi.object({
     username: Joi.string(),
@@ -32,5 +39,6 @@ const replaceUserAttributesSchema = Joi.object({
 module.exports = {
     createUserSchema,
     updateUserSchema,
-    replaceUserAttributesSchema
+    replaceUserAttributesSchema,
+    schemaRestore
 }
