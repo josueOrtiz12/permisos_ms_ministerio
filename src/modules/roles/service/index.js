@@ -1,15 +1,38 @@
 const { Op } = require('sequelize')
 const db = require('../../../models')
-const { INTERNAL_SERVER_ERROR } = require('../../../common/constants')
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('../../../common/constants')
 
-async function getAllRoles(pageNumber, pageSize, attributes = ['id', 'name']) {
+async function getAllRoles(pageNumber, pageSize, filters={}) {
     try {
-        const roles = await db.role.findAll({
+        const roles = await db.permission.findAll({
+            include: [
+                {
+                    model: db.role,
+                    as: 'role',
+                    where: !filters.role ? {} : {
+                        ['name']: {
+                            [Op.substring]: filters.role || '%%'
+                        }
+                    },
+                    exclude: ['createdAt', 'updatedAt']
+                },
+                {
+                    model: db.resource,
+                    as: 'resource',
+                    where: !filters.resource ? {} : {
+                        ['name']: {
+                            [Op.substring]: filters.resource || '%%'
+                        }
+                    
+                    },
+                    exclude: ['createdAt', 'updatedAt']
+                }
+            ],
+            required: true,
             skip: (pageNumber - 1) * pageSize,
             limit: pageSize,
-            attributes: attributes
         })
-
+        
         if(!roles.length) {
             const error = new Error('Roles not found')
             error.status = NOT_FOUND

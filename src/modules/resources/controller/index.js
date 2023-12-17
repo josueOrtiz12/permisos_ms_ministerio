@@ -4,8 +4,12 @@ const { getAllResources, getResourceBy, addNewResource, updateResourceComplete, 
 
 async function getResources(req, res) {
     try {
-        const { query: { pageNumber, pageSize } } = req
-        const resources = await getAllResources(pageNumber, pageSize)
+        const { query: { pageNumber, pageSize, name } } = req
+        const filters = {}
+        if(name) {
+            filters['name'] = `%${name}%`
+        }
+        const resources = await getAllResources(pageNumber, pageSize, filters)
 
         return res.status(SUCCESS).json({ code: 0, data: resources })
     } catch (e) {

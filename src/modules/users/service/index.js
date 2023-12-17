@@ -3,12 +3,38 @@ const db = require('../../../models')
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('../../../common/constants')
 
 
-async function getAllUsers(pageNumber = 1, pageSize = 10, attributes = ['id', 'username']) {
+async function getAllUsers(pageNumber = 1, pageSize = 10, attributes = ['id', 'username'], filters = {}) {
     try {
-        const users = await db.user.findAll({
+        console.log('filters', filters.role, !filters.role);
+        const users = await db.roleByUser.findAll({
+            exclude: ['createdAt', 'updatedAt'],
+            include: [{
+                model: db.role,
+                as: 'role',
+                required: true,
+                attributes: ['id', 'name', 'description'],
+                exclude: ['createdAt', 'updatedAt'],
+                where: !filters.role ? {} : {
+                    ['name']: {
+                        [Op.substring]: filters.role || '%%'
+                    },
+                }
+            }, {
+                model: db.user,
+                as: 'user',
+                required: true,
+                attributes: ['id', 'username'],
+                exclude: ['createdAt', 'updatedAt'],
+                where: !filters.username ? {} : {
+                    ['username']: {
+                        [Op.substring]: filters.username || '%%'
+                    },
+                }
+            
+            }], 
             skip: (pageNumber - 1) * pageSize,
             limit: pageSize,
-            attributes: attributes
+            attributes: attributes,
         })
         if(!users.length) { 
             const error = new Error('Users not found')
