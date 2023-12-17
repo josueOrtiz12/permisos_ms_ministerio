@@ -4,14 +4,18 @@ const { getAllRoles, getRoleBy,addNewRole, completeUpdateRole, partialUpdateRole
 
 async function getRoles(req, res) {
     try {
-        const { query: { pageNumber, pageSize, name } } = req
+        const { query: { pageNumber, pageSize, resource, role } } = req
         const filters = {}
 
-        if(name) {
-            filters['name'] = `${name}`
+        if(resource) {
+            filters['resource'] = `${resource}`
         }
 
-        const roles = await getAllRoles(pageNumber, pageSize, attributes = ['id', 'name', 'description', 'createdAt', 'updatedAt'], filters)
+        if(role) {
+            filters['role'] = `${role}`
+        }
+
+        const roles = await getAllRoles(pageNumber, pageSize, filters)
         return res.status(SUCCESS).json({ code: 0, data: roles })
     } catch (e) {
         const { message, status } = e
