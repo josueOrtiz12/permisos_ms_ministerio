@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { SUCCESS, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../../../common/constants')
 const { createUserSchema, updateUserSchema, replaceUserAttributesSchema, schemaRestore } = require('../schema')
 const { getAllUsers, getUserBy, addNewUser, completeUpdateUser, editUserPartial, restorePassword } = require('../service') 
@@ -5,8 +6,17 @@ const { hashCompare, hashString } = require('../../../utils/crypto')
 
 async function getUsers(req, res) {
     try {
-        const { query: { pageNumber, pageSize } } = req
-        const users = await getAllUsers(pageNumber, pageSize)
+        const { query: { pageNumber, pageSize, username, role } } = req
+        const filters = {}
+        if(username) {
+            filters['username'] = `%${username}%`
+        }
+
+        if(role) {
+            filters['role'] = `%${role}%`
+        }
+        
+        const users = await getAllUsers(pageNumber, pageSize, ['id', 'createdAt', 'updatedAt'], filters)
         return res.status(SUCCESS).json({ code: 0, data: users })
     } catch (e) {
         const { message, status } = e         

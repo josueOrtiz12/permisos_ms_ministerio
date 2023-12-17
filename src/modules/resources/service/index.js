@@ -1,13 +1,18 @@
 const { Op } = require('sequelize')
 const db = require('../../../models')
-const { INTERNAL_SERVER_ERROR } = require('../../../common/constants')
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('../../../common/constants')
 
-async function getAllResources(pageNumber, pageSize, attributes = ['id', 'name', 'description']) {
+async function getAllResources(pageNumber, pageSize, filters = {}) {
     try {
         const resources = await db.resource.findAll({
+            required: true,
             skip: (pageNumber - 1) * pageSize,
             limit: pageSize,
-            attributes: attributes
+            where: !filters.name ? {} : {
+                ['name']: {
+                    [Op.substring]: filters.name || '%%'
+                }
+            }
         })
 
         if(!resources.length) {
