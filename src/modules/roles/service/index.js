@@ -1,5 +1,6 @@
 const { Op } = require('sequelize')
 const db = require('../../../models')
+const { groupByRole } = require('../mapper/index')
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('../../../common/constants')
 
 async function getAllRoles(pageNumber, pageSize, filters={}) {
@@ -33,12 +34,13 @@ async function getAllRoles(pageNumber, pageSize, filters={}) {
             limit: pageSize,
         })
         
-        if(!roles.length) {
+        if(!roles?.length) {
             const error = new Error('Roles not found')
             error.status = NOT_FOUND
             throw error
         }
         
+        return groupByRole(roles)
         return roles
     } catch (e) {
         const error = new Error(e.message)
